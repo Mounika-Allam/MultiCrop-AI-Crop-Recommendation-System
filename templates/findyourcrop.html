@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Find Your Crop</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+<a href="/">Home</a>
+
+<a href="/about">About</a>
+
+<a class="active" href="/findyourcrop">FindYourCrop</a>
+
+</div>
+
+<div class="findcrop-page">
+
+<div class="title-bar">
+<h1>Find Your Best Crop Here</h1>
+</div>
+
+<div class="content-columns">
+
+<div class="form-container">
+<h2>Please enter the conditions</h2>
+
+<form action="/predict" method="POST">
+
+<label>Nitrogen</label>
+<input type="number" name="N" placeholder="nitrogen" required>
+<label>Phosphorous</label>
+<input type="number" name="P" placeholder="phosphorous" required>
+<label>Potassium</label>
+<input type="number" name="K" placeholder="potassium" required>
+<label>Temperature</label>
+<input type="number" step="any" name="temperature" placeholder="temperature" required>
+<label>Humidity</label>
+<input type="number" step="any" name="humidity" placeholder="humidity" required>
+<label>pH</label>
+<input type="number" step="any" name="ph" placeholder="ph" required>
+<label>Rainfall</label>
+<input type="number" step="any" name="rainfall" placeholder="rainfall" required>
+<button type="submit">Predict</button>
+
+</form>
+
+</div>
+
+{% if prediction_text %}
+
+<div class="prediction-box">
+
+{{ prediction_text }}
+
+</div>
+
+{% endif %}
+
+{% if top_predictions %}
+
+<div class="prediction-box">
+<div class="prediction-title">Best Match</div>
+
+<ol class="prediction-list">
+{% for item in top_predictions %}
+<li>
+<span class="crop-name">{{ item.crop }}</span>
+<span class="crop-confidence">{{ item.confidence }}% match</span>
+</li>
+{% endfor %}
+</ol>
+
+{% if family_crops %}
+<div class="group-title">Crop Family: {{ crop_family }}</div>
+<div class="group-chips">
+{% for crop in family_crops %}
+<span class="group-chip{% if loop.first %} selected{% endif %}">{{ crop }}</span>
+{% endfor %}
+</div>
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% endif %}
+
+</body>
+
+</html>
